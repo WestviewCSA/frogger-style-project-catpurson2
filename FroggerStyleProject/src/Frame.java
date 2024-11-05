@@ -44,6 +44,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	Omori rock2 = new Omori(100,200);
 	WaterScrolling[] water1 = new WaterScrolling[2];
 	WaterScrolling[] water2 = new WaterScrolling[2];
+	BridgeScrolling[] bridge1 = new BridgeScrolling[11];
 	
 
 	public void paint(Graphics g) {
@@ -56,6 +57,42 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for (WaterScrolling i : water2) {
 			i.paint(g);
 		}
+		
+		
+		for (int i = 0; i < bridge1.length; i++) {
+			if (bridge1[i].x >= 640) {
+				BridgeScrolling j;
+				if (i == 0) {
+					j = bridge1[10];
+				} else {
+					j = bridge1[i-1];
+				}
+				
+				System.out.println("j type: " + j.type);
+				switch (j.type) { 
+				case 0:
+					bridge1[i].type = (int) (Math.random()*2);
+					break;
+				case 1: 
+					bridge1[i].type = (int) (Math.random()*1.75)+2;
+					break;
+				case 2:
+					bridge1[i].type = (int) (Math.random()*1.3+2.25);
+					break;
+				case 3:
+					bridge1[i].type = 0;
+					break;
+				}
+				
+				bridge1[i].x = -bridge1[i].width;
+			}
+		}
+		
+		for (BridgeScrolling i : bridge1) {
+			i.paint(g);
+		}
+		
+		
 		
 		omori.paint(g);
 		rock2.paint(g);
@@ -84,6 +121,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		}
 		for (int i = 0; i < water2.length; i++) {
 			water2[i] = new WaterScrolling(640-640*(i+1), 464);
+		}
+		for(int i = 0; i < bridge1.length; i++) {
+			bridge1[i] = new BridgeScrolling(640-64*(i+1), 400);
 		}
 		
 
