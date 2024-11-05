@@ -40,22 +40,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	//frame width/height
 	int width = 640;
 	int height = 1116;	
-	Rock rock = new Rock();
-	Rock rock2 = new Rock(100,200);
-	Scrolling[] scroll = new Scrolling[11];
-	WaterScrolling[] water1 = new WaterScrolling[11];
-	WaterScrolling[] water2 = new WaterScrolling[11];
+	Omori omori = new Omori();
+	Omori rock2 = new Omori(100,200);
+	WaterScrolling[] water1 = new WaterScrolling[2];
+	WaterScrolling[] water2 = new WaterScrolling[2];
 	
 
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		
-		rock.paint(g);
-		rock2.paint(g);
-		
-		for (Scrolling i : scroll) {
-			i.paint(g);
-		}
 		
 		for (WaterScrolling i : water1) {
 			i.paint(g);
@@ -63,6 +56,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for (WaterScrolling i : water2) {
 			i.paint(g);
 		}
+		
+		omori.paint(g);
+		rock2.paint(g);
 
 	}
 	
@@ -82,15 +78,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		//backgroundMusic.play();
 		
 		//set up array
-		for (int i = 0; i < scroll.length; i++) {
-			scroll[i] = new Scrolling(-64*(i+1), 300, (int) (Math.random()*2));
-		}
 		
 		for (int i = 0; i < water1.length; i++) {
-			water1[i] = new WaterScrolling(640-64*(i+1), 400);
+			water1[i] = new WaterScrolling(640-640*(i+1), 400);
 		}
 		for (int i = 0; i < water2.length; i++) {
-			water2[i] = new WaterScrolling(640-64*(i+1), 464);
+			water2[i] = new WaterScrolling(640-640*(i+1), 464);
 		}
 		
 
@@ -151,7 +144,22 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		System.out.println(arg0.getKeyCode());
+		//System.out.println(arg0.getKeyCode());
+		
+		switch(arg0.getKeyCode()) {
+		case 38:
+			omori.vy = -5;
+			break;
+		case 40:
+			omori.vy = 5;
+			break;
+		case 37:
+			omori.vx = -5;
+			break;
+		case 39:
+			omori.vx = 5;
+			break;
+		}
 		
 		
 		
@@ -160,6 +168,16 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
+		switch(arg0.getKeyCode()) {
+		case 38:
+			omori.vy = 0;
+		case 40:
+			omori.vy = 0;
+		case 37:
+			omori.vx = 0;
+		case 39:
+			omori.vx = 0;
+		}
 		
 	}
 
