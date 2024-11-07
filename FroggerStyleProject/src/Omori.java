@@ -15,6 +15,7 @@ public class Omori{
 	int woff, hoff;
 	int x, y;						//position of the object
 	int vx, vy;						//movement variables
+	int vxa = 0, vya = 0, vxk = 0, vyk= 0;
 	double scaleWidth = 2.0;		//change to scale image
 	double scaleHeight = 2.0; 		//change to scale image
 
@@ -50,6 +51,9 @@ public class Omori{
 		//these are the 2 lines of code needed draw an image on the screen
 		Graphics2D g2 = (Graphics2D) g;
 		
+		vx = vxa + vxk;
+		vy = vya + vyk;
+		
 		//update x and y
 		x+=vx;
 		y+=vy;	
@@ -63,6 +67,11 @@ public class Omori{
 		if (Frame.debugging) {
 			g.setColor(Color.green);
 			g.drawRect(x+woff, y+hoff, width, height);
+		}
+		
+		if (x > 620) {
+			x = 600/2-width/2;
+			y = 64;
 		}
 		
 

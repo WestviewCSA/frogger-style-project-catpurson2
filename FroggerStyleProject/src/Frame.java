@@ -23,7 +23,7 @@ import javax.swing.Timer;
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	
 	// to debug
-	public static boolean debugging = true;
+	public static boolean debugging = false;
 	
 	//Timer related variables
 	int waveTimer = 5; //each wave of enemies is 20s
@@ -62,13 +62,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for (int i = 0; i < bridge1.length; i++) {
 			if (bridge1[i].x >= 640) {
 				BridgeScrolling j;
+				BridgeScrolling k;
+				if (i <= 1) {
+					k = bridge1[10];
+				} else {
+					k = bridge1[i-2];
+				}
 				if (i == 0) {
 					j = bridge1[10];
+					k = bridge1[9];
 				} else {
 					j = bridge1[i-1];
 				}
 				
-				System.out.println("j type: " + j.type);
+				if (debugging) {System.out.println("j type: " + j.type);}
 				switch (j.type) { 
 				case 0:
 					bridge1[i].type = (int) (Math.random()*2);
@@ -77,7 +84,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					bridge1[i].type = (int) (Math.random()*1.75)+2;
 					break;
 				case 2:
-					bridge1[i].type = (int) (Math.random()*1.3+2.25);
+					if (k.type == 2) {
+						bridge1[i].type = 3;
+					} else {
+						bridge1[i].type = (int) (Math.random()*1.3+2.25);
+					}
 					break;
 				case 3:
 					bridge1[i].type = 0;
@@ -92,7 +103,33 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			i.paint(g);
 		}
 		
+		int die = 0;
 		
+		for (BridgeScrolling i : bridge1) {
+			if (i.collided(omori)) {
+				if (i.type == 0) {
+					die = 1;
+				} else if(die != 1) {
+					die = 2;
+				}
+			}
+		}
+		
+		System.out.println(die);
+		System.out.println(omori.vx);
+		
+		switch(die) {
+		case 0:
+			omori.vxa = 0;
+			break;
+		case 1: 
+			omori.x = 600/2-width/2;
+			omori.y = 64;
+			break;
+		case 2:
+			omori.vxa = 4;
+			break;
+		}
 		
 		omori.paint(g);
 		rock2.paint(g);
@@ -188,16 +225,16 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		switch(arg0.getKeyCode()) {
 		case 38:
-			omori.vy = -5;
+			omori.vyk = -4;
 			break;
 		case 40:
-			omori.vy = 5;
+			omori.vyk = 4;
 			break;
 		case 37:
-			omori.vx = -5;
+			omori.vxk = -4;
 			break;
 		case 39:
-			omori.vx = 5;
+			omori.vxk = 4;
 			break;
 		}
 		
@@ -210,13 +247,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		// TODO Auto-generated method stub
 		switch(arg0.getKeyCode()) {
 		case 38:
-			omori.vy = 0;
+			omori.vyk = 0;
 		case 40:
-			omori.vy = 0;
+			omori.vyk = 0;
 		case 37:
-			omori.vx = 0;
+			omori.vxk = 0;
 		case 39:
-			omori.vx = 0;
+			omori.vxk = 0;
 		}
 		
 	}

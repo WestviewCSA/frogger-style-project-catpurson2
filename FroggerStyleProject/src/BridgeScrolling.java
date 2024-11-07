@@ -1,6 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
@@ -38,7 +39,7 @@ public class BridgeScrolling{
 		y = 300;
 		vx = 4;
 		vy = 0;
-		type = 1;
+		type = 0;
 		
 		tx = AffineTransform.getTranslateInstance(0, 0);
 		
@@ -80,8 +81,28 @@ public class BridgeScrolling{
 		}
 		
 		g2.drawImage(forward, tx, null);
-		System.out.println("type: " + type);
+		if (Frame.debugging) {
+			System.out.println("type: " + type);
+			g.drawRect(x, y, width, height);
+		}
 
+	}
+	
+	//collision
+	public boolean collided(Omori character) {
+		
+		Rectangle main = new Rectangle(
+				character.x + character.woff,
+				character.y + character.hoff,
+				character.width,
+				character.height
+				);
+		
+		Rectangle object = new Rectangle(x, y, width, height);
+		
+		
+		return main.intersects(object);
+		
 	}
 	
 	private void init(double a, double b) {
