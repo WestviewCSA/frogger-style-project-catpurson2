@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -13,6 +14,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,7 +27,7 @@ import javax.swing.Timer;
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	
 	// to debug
-	public static boolean debugging = false;
+	public static boolean debugging = true;
 	
 	//Timer related variables
 	int waveTimer = 5; //each wave of enemies is 20s
@@ -39,16 +43,30 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	
 	//frame width/height
 	int width = 640;
-	int height = 1116;	
+	int height = 1062;
 	Omori omori = new Omori();
-	Omori rock2 = new Omori(100,200);
 	WaterScrolling[] water1 = new WaterScrolling[2];
 	WaterScrolling[] water2 = new WaterScrolling[2];
-	BridgeScrolling[] bridge1 = new BridgeScrolling[11];
+	BridgeScrolling[] bridge1 = new BridgeScrolling[11]; 
+	BridgeScrolling[] bridge2 = new BridgeScrolling[11]; 
+	Background back = new Background();
 	
+	
+	
+	
+	
+	{for (int i = 0; i < 2; i++) {
+		System.out.println("gay");
+	}}
 
 	public void paint(Graphics g) {
 		super.paintComponent(g);
+		
+		g.setColor(Color.green);
+		
+		back.paint(g);
+		
+		
 		
 		
 		for (WaterScrolling i : water1) {
@@ -57,6 +75,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for (WaterScrolling i : water2) {
 			i.paint(g);
 		}
+		
+		if (debugging) {for (int i = 0; i < 20; i++) {
+			g.drawLine(0, (i+1)*64, 640, (i+1)*64);
+			g.setColor(Color.red);
+			g.drawLine(0, 448, 640, 448);
+			g.setColor(Color.green);
+		}}
 		
 		
 		for (int i = 0; i < bridge1.length; i++) {
@@ -75,7 +100,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					j = bridge1[i-1];
 				}
 				
-				if (debugging) {System.out.println("j type: " + j.type);}
 				switch (j.type) { 
 				case 0:
 					bridge1[i].type = (int) (Math.random()*2);
@@ -91,15 +115,72 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					}
 					break;
 				case 3:
-					bridge1[i].type = 0;
+					bridge1[i].type = (int) (Math.random()*1.05);
 					break;
 				}
 				
-				bridge1[i].x = -bridge1[i].width;
+				if (bridge1[i].dir == 0) {
+					bridge1[i].x = -bridge1[i].width;
+				} else {
+					bridge1[i].x = width + bridge1[i].width;
+				}
+
+			}
+		}
+		
+		for (int i = 0; i < bridge2.length; i++) {
+			if (bridge2[i].x <= -bridge2[i].width) {
+				BridgeScrolling j;
+				BridgeScrolling k;
+				if (i >= 9) {
+					k = bridge2[0];
+				} else {
+					k = bridge2[i+2];
+				}
+				if (i == 10) {
+					j = bridge2[0];
+					k = bridge2[1];
+				} else {
+					j = bridge2[i+1];
+				}
+				
+				switch (j.type) { 
+				case 0:
+					bridge2[i].type = 3 + (int) (Math.random()*2);
+					break;
+				case 3: 
+					bridge2[i].type = (int) (Math.random()*1.75+1.25);
+					break;
+				case 2:
+					if (k.type == 2) {
+						bridge2[i].type = 1;
+					} else {
+						bridge2[i].type = (int) (Math.random()*.8+1.5);
+					}
+					break;
+				case 1:
+					bridge2[i].type = (int) (Math.random()*1.05+3.95);
+					break;
+				case 4:
+					bridge2[i].type = 3 + (int) (Math.random()*2);
+					break;
+				}
+				
+				System.out.println(bridge2[i].x + " " + bridge2[i].dir);
+				
+				if (bridge2[i].dir == 0) {
+					bridge2[i].x = -bridge2[i].width;
+				} else {
+					bridge2[i].x = width;
+				}
 			}
 		}
 		
 		for (BridgeScrolling i : bridge1) {
+			i.paint(g);
+		}
+		
+		for (BridgeScrolling i : bridge2) {
 			i.paint(g);
 		}
 		
@@ -111,6 +192,16 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					die = 1;
 				} else if(die != 1) {
 					die = 2;
+				}
+			}
+		}
+		
+		for (BridgeScrolling i : bridge2) {
+			if (i.collided(omori)) {
+				if (i.type == 0) {
+					die = 1;
+				} else if(die != 1) {
+					die = 3;
 				}
 			}
 		}
@@ -129,10 +220,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		case 2:
 			omori.vxa = 4;
 			break;
+		case 3:
+			omori.vxa = -4;
+			break;
 		}
 		
 		omori.paint(g);
-		rock2.paint(g);
 
 	}
 	
@@ -154,13 +247,16 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		//set up array
 		
 		for (int i = 0; i < water1.length; i++) {
-			water1[i] = new WaterScrolling(640-640*(i+1), 400);
+			water1[i] = new WaterScrolling(640-640*(i+1), 448);
 		}
 		for (int i = 0; i < water2.length; i++) {
-			water2[i] = new WaterScrolling(640-640*(i+1), 464);
+			water2[i] = new WaterScrolling(640-640*(i+1), 448+64);
 		}
 		for(int i = 0; i < bridge1.length; i++) {
-			bridge1[i] = new BridgeScrolling(640-64*(i+1), 400);
+			bridge1[i] = new BridgeScrolling(640-64*(i+1), 448, 0);
+		}
+		for(int i = 0; i < bridge2.length; i++) {
+			bridge2[i] = new BridgeScrolling(640-64*(i+1), 448+64, 1);
 		}
 		
 

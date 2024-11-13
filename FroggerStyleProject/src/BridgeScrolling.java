@@ -10,7 +10,7 @@ public class BridgeScrolling{
 	private Image forward, left, right, middle, blank; 	
 	private AffineTransform tx;
 	
-	int dir = 0; 					//0-forward, 1-backward, 2-left, 3-right
+	int dir; 					//0-forward, 1-backward, 2-left, 3-right
 	int width, height;
 	int x, y;						//position of the object
 	int vx, vy;						//movement variables
@@ -41,6 +41,7 @@ public class BridgeScrolling{
 		vy = 0;
 		type = 0;
 		
+		
 		tx = AffineTransform.getTranslateInstance(0, 0);
 		
 		init(x, y); 				//initialize the location of the image
@@ -48,11 +49,19 @@ public class BridgeScrolling{
 		
 	}
 	
-	public BridgeScrolling(int x, int y) {
+	public BridgeScrolling(int x, int y, int dir) {
 		this();
 		
 		this.x = x;
 		this.y = y;
+		this.dir = dir;
+		if (dir == 0) {
+			vx = 4;
+		} else {
+			vx = -4;
+		}
+		
+		
 		
 	}
 
@@ -78,12 +87,15 @@ public class BridgeScrolling{
 		case 3:
 			forward = left;
 			break;
+		case 4:
+			forward = blank;
+			break;
 		}
 		
 		g2.drawImage(forward, tx, null);
 		if (Frame.debugging) {
-			System.out.println("type: " + type);
 			g.drawRect(x, y, width, height);
+			g.drawString(Integer.toString(type), x+32, y+32);
 		}
 
 	}
@@ -93,9 +105,9 @@ public class BridgeScrolling{
 		
 		Rectangle main = new Rectangle(
 				character.x + character.woff,
-				character.y + character.hoff,
+				character.y + character.hoff+character.height-character.feeth,
 				character.width,
-				character.height
+				character.feeth
 				);
 		
 		Rectangle object = new Rectangle(x, y, width, height);

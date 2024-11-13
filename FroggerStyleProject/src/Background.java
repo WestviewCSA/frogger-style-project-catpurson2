@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -6,32 +5,30 @@ import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
 
-public class Omori{
+public class Background{
 	private Image forward, backward, left, right; 	
 	private AffineTransform tx;
 	
 	int dir = 0; 					//0-forward, 1-backward, 2-left, 3-right
 	int width, height;
-	int feeth;
-	int woff, hoff;
 	int x, y;						//position of the object
 	int vx, vy;						//movement variables
-	int vxa = 0, vya = 0, vxk = 0, vyk= 0;
-	double scaleWidth = 2.0;		//change to scale image
-	double scaleHeight = 2.0; 		//change to scale image
+	double scaleWidth = 1.0;		//change to scale image
+	double scaleHeight = 1.0; 		//change to scale image
 
-	public Omori() {
-		forward 	= getImage("/imgs/"+"omori-pixilart.png"); //load the image for Tree
+	public Background() {
+		forward 	= getImage("/imgs/"+"forwardFile.png"); //load the image for Tree
+		backward 	= getImage("/imgs/"+"backward.png"); //load the image for Tree
+		left 		= getImage("/imgs/"+"left.png"); //load the image for Tree
+		right 		= getImage("/imgs/"+"right.png"); //load the image for Tree
 
 		//alter these
-		width = 41;
-		woff = 11;
-		height = 64;
-		x = 600/2-width/2;
-		y = 64;
+		width = 0;
+		height = 0;
+		x = 0;
+		y = 0;
 		vx = 0;
 		vy = 0;
-		feeth = 20;
 		
 		tx = AffineTransform.getTranslateInstance(0, 0);
 		
@@ -39,46 +36,24 @@ public class Omori{
 									//use your variables
 		
 	}
-	
-	public Omori(int x, int y) {
-		
-		this();
-		
-		this.x = x;
-		this.y = y;
-		
-	}
 
 	public void paint(Graphics g) {
 		//these are the 2 lines of code needed draw an image on the screen
 		Graphics2D g2 = (Graphics2D) g;
 		
-		vx = vxa + vxk;
-		vy = vya + vyk;
-		
-		//update x and y
 		x+=vx;
 		y+=vy;	
 		
 		init(x,y);
 		
+		Image southroad = getImage("/imgs/southroad.png");
 		
-		
-		
-		g2.drawImage(forward, tx, null);
-		
-		//draw hit box
-		if (Frame.debugging) {
-			g.setColor(Color.green);
-			g.drawRect(x+woff, y+hoff, width, height);
-		}
-		
-		if (x > 620) {
-			x = 600/2-width/2;
-			y = 64;
-		}
-		
+		g.drawImage(southroad, 0, 64*3, 640, 78, null);
 
+		
+		Image northroad = getImage("/imgs/northroad.png");
+		
+		g.drawImage(northroad, 0, 64*2-15, 640, 78, null);
 	}
 	
 	private void init(double a, double b) {
@@ -89,14 +64,12 @@ public class Omori{
 	private Image getImage(String path) {
 		Image tempImage = null;
 		try {
-			URL imageURL = Omori.class.getResource(path);
+			URL imageURL = Background.class.getResource(path);
 			tempImage = Toolkit.getDefaultToolkit().getImage(imageURL);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return tempImage;
 	}
-	
-	
 
 }
