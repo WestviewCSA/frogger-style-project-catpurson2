@@ -28,7 +28,7 @@ public class Omori{
 		woff = 11;
 		height = 64;
 		x = 600/2-width/2;
-		y = 64;
+		y = 64-17;
 		vx = 0;
 		vy = 0;
 		feeth = 20;
@@ -70,7 +70,10 @@ public class Omori{
 		//draw hit box
 		if (Frame.debugging) {
 			g.setColor(Color.green);
-			g.drawRect(x+woff, y+hoff, width, height);
+			g.drawRect(x + woff,
+					y + hoff+height-feeth,
+					width,
+					feeth);
 		}
 		
 		if (x > 620) {
@@ -95,6 +98,11 @@ public class Omori{
 			e.printStackTrace();
 		}
 		return tempImage;
+	}
+	
+	public void reset() {
+		x = 600/2-width/2;
+		y = 64-17;
 	}
 	
 	

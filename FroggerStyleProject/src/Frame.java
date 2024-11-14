@@ -47,8 +47,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	Omori omori = new Omori();
 	WaterScrolling[] water1 = new WaterScrolling[2];
 	WaterScrolling[] water2 = new WaterScrolling[2];
+	WaterScrolling[] water3 = new WaterScrolling[2];
 	BridgeScrolling[] bridge1 = new BridgeScrolling[11]; 
 	BridgeScrolling[] bridge2 = new BridgeScrolling[11]; 
+	BridgeScrolling[] bridge3 = new BridgeScrolling[11];
+	CarScrolling[] car1 = new CarScrolling[6];
+	CarScrolling[] car2 = new CarScrolling[6];
 	Background back = new Background();
 	
 	
@@ -66,13 +70,22 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		back.paint(g);
 		
+		for (CarScrolling i : car1) {
+			i.paint(g);
+		}
 		
+		for (CarScrolling i : car2) {
+			i.paint(g);
+		}
 		
 		
 		for (WaterScrolling i : water1) {
 			i.paint(g);
 		}
 		for (WaterScrolling i : water2) {
+			i.paint(g);
+		}
+		for (WaterScrolling i : water3) {
 			i.paint(g);
 		}
 		
@@ -166,7 +179,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					break;
 				}
 				
-				System.out.println(bridge2[i].x + " " + bridge2[i].dir);
 				
 				if (bridge2[i].dir == 0) {
 					bridge2[i].x = -bridge2[i].width;
@@ -176,11 +188,17 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			}
 		}
 		
+		bridge3 = bridgeRandom(bridge3);
+		
 		for (BridgeScrolling i : bridge1) {
 			i.paint(g);
 		}
 		
 		for (BridgeScrolling i : bridge2) {
+			i.paint(g);
+		}
+		
+		for (BridgeScrolling i : bridge3) {
 			i.paint(g);
 		}
 		
@@ -206,16 +224,24 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			}
 		}
 		
-		System.out.println(die);
-		System.out.println(omori.vx);
+		for (BridgeScrolling i : bridge3) {
+			if (i.collided(omori)) {
+				if (i.type == 0) {
+					die = 1;
+				} else if(die != 1) {
+					die = 2;
+				}
+			}
+		}
+		
+		
 		
 		switch(die) {
 		case 0:
 			omori.vxa = 0;
 			break;
 		case 1: 
-			omori.x = 600/2-width/2;
-			omori.y = 64;
+			omori.reset();
 			break;
 		case 2:
 			omori.vxa = 4;
@@ -225,7 +251,23 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 		}
 		
+		for (CarScrolling i : car1) {
+			System.out.println(i.collided(omori) + " " + i.type);
+			if(i.collided(omori) && i.type != 0) {
+				omori.reset();
+			}
+		}
+		
+		for (CarScrolling i : car2) {
+			System.out.println(i.collided(omori) + " " + i.type);
+			if(i.collided(omori) && i.type != 0) {
+				omori.reset();
+			}
+		}
+		
 		omori.paint(g);
+		
+	
 
 	}
 	
@@ -252,11 +294,23 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for (int i = 0; i < water2.length; i++) {
 			water2[i] = new WaterScrolling(640-640*(i+1), 448+64);
 		}
+		for (int i = 0; i < water3.length; i++) {
+			water3[i] = new WaterScrolling(640-640*(i+1), 64*5);
+		}
 		for(int i = 0; i < bridge1.length; i++) {
 			bridge1[i] = new BridgeScrolling(640-64*(i+1), 448, 0);
 		}
 		for(int i = 0; i < bridge2.length; i++) {
 			bridge2[i] = new BridgeScrolling(640-64*(i+1), 448+64, 1);
+		}
+		for(int i = 0; i < bridge3.length; i++) {
+			bridge3[i] = new BridgeScrolling(640-64*(i+1), 64*5, 0);
+		}
+		for(int i = 0; i < car1.length; i++) {
+			car1[i] = new CarScrolling(640-72*2*(i+1), 64*2-17*2, (int) Math.random() * 5);
+		}
+		for(int i = 0; i < car2.length; i++) {
+			car2[i] = new CarScrolling(640-72*2*(i+1), 64*2-17*2+64, (int) Math.random() * 5);
 		}
 		
 
@@ -358,6 +412,56 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public BridgeScrolling[] bridgeRandom(BridgeScrolling[] bridge1) {
+		
+		
+		for (int i = 0; i < bridge1.length; i++) {
+			if (bridge1[i].x >= 640) {
+				BridgeScrolling j;
+				BridgeScrolling k;
+				if (i <= 1) {
+					k = bridge1[10];
+				} else {
+					k = bridge1[i-2];
+				}
+				if (i == 0) {
+					j = bridge1[10];
+					k = bridge1[9];
+				} else {
+					j = bridge1[i-1];
+				}
+				
+				switch (j.type) { 
+				case 0:
+					bridge1[i].type = (int) (Math.random()*2);
+					break;
+				case 1: 
+					bridge1[i].type = (int) (Math.random()*1.75)+2;
+					break;
+				case 2:
+					if (k.type == 2) {
+						bridge1[i].type = 3;
+					} else {
+						bridge1[i].type = (int) (Math.random()*1.3+2.25);
+					}
+					break;
+				case 3:
+					bridge1[i].type = (int) (Math.random()*1.05);
+					break;
+				}
+				
+				if (bridge1[i].dir == 0) {
+					bridge1[i].x = -bridge1[i].width;
+				} else {
+					bridge1[i].x = width + bridge1[i].width;
+				}
+
+			}
+		}
+		
+		return bridge1;
 	}
 
 }
