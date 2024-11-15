@@ -46,6 +46,20 @@ public class Background{
 		
 		init(x,y);
 		
+		Image grass = getImage("/imgs/grass.png");
+		Image grass1 = getImage("/imgs/grass1.png");
+		Image grass2 = getImage("/imgs/ground3.png");
+		Image end = getImage("/imgs/blanket.png");
+		
+		g.drawImage(grass1, 0, 0, 640, 64, null);
+		g.drawImage(grass1, 0, 64, 640, 64, null);
+		g.drawImage(grass, 0, 64*6, 640, 64, null);
+
+	
+
+
+		
+		
 		Image southroad = getImage("/imgs/southroad.png");
 		
 		g.drawImage(southroad, 0, 64*3, 640, 78, null);
@@ -54,6 +68,25 @@ public class Background{
 		Image northroad = getImage("/imgs/northroad.png");
 		
 		g.drawImage(northroad, 0, 64*2-15, 640, 78, null);
+		
+		g.drawImage(grass2, 0, 64*4, 640, 64, null);
+		g.drawImage(grass2, 0, 64*4-2, 640, 64, null);
+		
+		g.drawImage(grass, 0, 64*6, 640, 64, null);
+		g.drawImage(grass1, 0, 64*9, 640, 64, null);
+		
+		g.drawImage(southroad, 0, 64*11, 640, 78, null);
+		g.drawImage(northroad, 0, 64*10-15, 640, 78, null);
+		
+		g.drawImage(grass2, 0, 64*12, 640, 64, null);
+		g.drawImage(grass2, 0, 64*12-2, 640, 64, null);
+		
+		g.drawImage(grass, 0, 64*14, 640, 64, null);
+		
+
+		g.drawImage(end, 0, 64*15, 640, 64, null);
+
+
 	}
 	
 	private void init(double a, double b) {

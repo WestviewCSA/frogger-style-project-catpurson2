@@ -27,7 +27,7 @@ import javax.swing.Timer;
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	
 	// to debug
-	public static boolean debugging = true;
+	public static boolean debugging = false;
 	
 	//Timer related variables
 	int waveTimer = 5; //each wave of enemies is 20s
@@ -252,14 +252,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		}
 		
 		for (CarScrolling i : car1) {
-			System.out.println(i.collided(omori) + " " + i.type);
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
 			}
 		}
 		
 		for (CarScrolling i : car2) {
-			System.out.println(i.collided(omori) + " " + i.type);
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
 			}
@@ -307,10 +305,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			bridge3[i] = new BridgeScrolling(640-64*(i+1), 64*5, 0);
 		}
 		for(int i = 0; i < car1.length; i++) {
-			car1[i] = new CarScrolling(640-72*2*(i+1), 64*2-17*2, (int) Math.random() * 5);
+			car1[i] = new CarScrolling(640-72*2*(i+1), 64*2-17*2, (int) (Math.random() * 5), false);
 		}
 		for(int i = 0; i < car2.length; i++) {
-			car2[i] = new CarScrolling(640-72*2*(i+1), 64*2-17*2+64, (int) Math.random() * 5);
+			car2[i] = new CarScrolling(640-72*2*(i+1), 64*2-17*2+64, (int) (Math.random() * 5), true);
 		}
 		
 

@@ -48,13 +48,17 @@ public class CarScrolling{
 		
 	}
 	
-	public CarScrolling(int x, int y, int type) {
+	public CarScrolling(int x, int y, int type, boolean dir) {
 		this();
 		
 		this.x = x;
 		this.y = y;
 		this.type = type;
-		
+		if (dir) {
+			vx = 8;
+		} else {
+			vx = 4;
+		}
 	}
 
 	public void paint(Graphics g) {
