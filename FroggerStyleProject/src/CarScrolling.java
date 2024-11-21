@@ -68,7 +68,7 @@ public class CarScrolling{
 		x+=vx;
 		y+=vy;	
 		
-		if (x > 640) {
+		if (x > 640 ) {
 			x = -width-76;
 			type = (int) (Math.random()*2);
 			if (type == 1) {

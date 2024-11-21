@@ -31,7 +31,7 @@ public class Omori{
 		y = 64-17;
 		vx = 0;
 		vy = 0;
-		feeth = 20;
+		feeth = 20; //feet height
 		
 		tx = AffineTransform.getTranslateInstance(0, 0);
 		
@@ -76,7 +76,7 @@ public class Omori{
 					feeth);
 		}
 		
-		if (x > 620) {
+		if (x > 620 && x < -width) {
 			x = 600/2-width/2;
 			y = 64;
 		}
