@@ -59,6 +59,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	CarScrolling[] car3 = new CarScrolling[6];
 	CarScrolling[] car4 = new CarScrolling[6];
 	ArrayList<Sunny> sunny = new ArrayList<Sunny>();
+	ArrayList<Sunny> omorlist = new ArrayList<Sunny>();
 	Background back = new Background();
 	
 	
@@ -114,6 +115,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			g.setColor(Color.green);
 		}}
 		
+		for(int i = 0; i < sunny.size(); i++) {
+			if (sunny.get(i).collided(omori)) {
+				omorlist.add(new Sunny(sunny.get(i).x, sunny.get(i).y, true));
+				sunny.remove(i);
+			}
+		}
 		
 		for (int i = 0; i < bridge1.length; i++) {
 			if (bridge1[i].x >= 640) {
@@ -373,7 +380,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		}
 		
 		while(sunny.size() < 5) {
-			sunny.add(new Sunny(sunny.size()*64*2+32, 64*15));
+			sunny.add(new Sunny(sunny.size()*64*2+32, 64*15, false));
 		}
 		
 
