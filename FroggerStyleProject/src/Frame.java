@@ -37,7 +37,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	int level = 0;
 	
 	
-	Font myFont = new Font("Courier", Font.BOLD, 40);
+	Font myFont = new Font("Courier", Font.BOLD, 20);
 	SimpleAudioPlayer backgroundMusic = new SimpleAudioPlayer("scifi.wav", false);
 //	Music soundBang = new Music("bang.wav", false);
 //	Music soundHaha = new Music("haha.wav", false);
@@ -61,6 +61,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	ArrayList<Sunny> sunny = new ArrayList<Sunny>();
 	ArrayList<Sunny> omorlist = new ArrayList<Sunny>();
 	Background back = new Background();
+	int score = 5;
+	int deaths = 0;
 	
 	
 	
@@ -119,6 +121,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			if (sunny.get(i).collided(omori)) {
 				omorlist.add(new Sunny(sunny.get(i).x, sunny.get(i).y, true));
 				sunny.remove(i);
+				omori.reset();
+				score++;
 			}
 		}
 		
@@ -282,6 +286,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			break;
 		case 1: 
 			omori.reset();
+			deaths++;
 			break;
 		case 2:
 			omori.vxa = 4;
@@ -294,24 +299,28 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for (CarScrolling i : car1) {
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
+				deaths++;
 			}
 		}
 		
 		for (CarScrolling i : car2) {
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
+				deaths++;
 			}
 		}
 		
 		for (CarScrolling i : car3) {
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
+				deaths++;
 			}
 		}
 		
 		for (CarScrolling i : car4) {
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
+				deaths++;
 			}
 		}
 		
@@ -319,9 +328,22 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			i.paint(g);
 		}
 		
+		for(Sunny i : omorlist) {
+			i.paint(g);
+		}
+		
 		omori.paint(g);
 		
-	
+		
+		Color water = new Color(91, 91, 236);
+		g.setColor(water);
+		g.setFont(myFont);
+		g.drawString("Score: " + score, 32, 32);
+		g.drawString("Deaths: " + deaths, 32, 64);
+		
+		if(score == 5) {
+			g.drawRect(0, 0, 64*10, 64*17);
+		}
 
 	}
 	
