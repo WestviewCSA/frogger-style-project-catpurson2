@@ -89,6 +89,11 @@ public class Background{
 
 	}
 	
+	public void drawEnd(Graphics g) {
+		Image endScreen = getImage("/imgs/omori-pixilart.png");
+		g.drawImage(endScreen, -(1062-640)/2, 0, 1062, 1062, null);
+	}
+	
 	private void init(double a, double b) {
 		tx.setToTranslation(a, b);
 		tx.scale(scaleWidth, scaleHeight);

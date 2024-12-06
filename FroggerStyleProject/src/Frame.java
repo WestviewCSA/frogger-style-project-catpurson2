@@ -16,9 +16,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -39,6 +42,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	
 	Font myFont = new Font("Courier", Font.BOLD, 20);
 	SimpleAudioPlayer backgroundMusic = new SimpleAudioPlayer("scifi.wav", false);
+	SimpleAudioPlayer crash = new SimpleAudioPlayer("crash.wav", false);
+	SimpleAudioPlayer splash = new SimpleAudioPlayer("splash.wav", false);
 //	Music soundBang = new Music("bang.wav", false);
 //	Music soundHaha = new Music("haha.wav", false);
 	
@@ -61,7 +66,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	ArrayList<Sunny> sunny = new ArrayList<Sunny>();
 	ArrayList<Sunny> omorlist = new ArrayList<Sunny>();
 	Background back = new Background();
-	int score = 5;
+	int score = 0;
 	int deaths = 0;
 	
 	
@@ -287,12 +292,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		case 1: 
 			omori.reset();
 			deaths++;
+			splash.play();
+			splash = new SimpleAudioPlayer("splash.wav", false);
 			break;
 		case 2:
-			omori.vxa = 4;
+			omori.vxa = 2;
 			break;
 		case 3:
-			omori.vxa = -4;
+			omori.vxa = -2;
 			break;
 		}
 		
@@ -300,6 +307,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
 				deaths++;
+				crash.play();
+				crash = new SimpleAudioPlayer("crash.wav", false);
 			}
 		}
 		
@@ -307,6 +316,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
 				deaths++;
+				crash.play();
+				crash = new SimpleAudioPlayer("crash.wav", false);
+
 			}
 		}
 		
@@ -314,6 +326,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
 				deaths++;
+				crash.play();
+				crash = new SimpleAudioPlayer("crash.wav", false);
+
 			}
 		}
 		
@@ -321,6 +336,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			if(i.collided(omori) && i.type != 0) {
 				omori.reset();
 				deaths++;
+				crash.play();
+				crash = new SimpleAudioPlayer("crash.wav", false);
+
 			}
 		}
 		
@@ -341,8 +359,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		g.drawString("Score: " + score, 32, 32);
 		g.drawString("Deaths: " + deaths, 32, 64);
 		
-		if(score == 5) {
-			g.drawRect(0, 0, 64*10, 64*17);
+		if(score >= 5) {
+			g.setColor(water);
+			back.drawEnd(g);
+			System.out.println("end screen");
+			omori.reset();
+			g.drawString("press [space] to restart", 190, 230);
 		}
 
 	}
@@ -467,17 +489,25 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		switch(arg0.getKeyCode()) {
 		case 38:
-			omori.vyk = -4;
+			omori.vyk = -2;
 			break;
 		case 40:
-			omori.vyk = 4;
+			omori.vyk = 2;
 			break;
 		case 37:
-			omori.vxk = -4;
+			omori.vxk = -2;
 			break;
 		case 39:
-			omori.vxk = 4;
+			omori.vxk = 2;
 			break;
+		case 32:
+			score = 0;
+			deaths = 0;
+			sunny = new ArrayList<Sunny>();
+			omorlist = new ArrayList<Sunny>();
+			while(sunny.size() < 5) {
+				sunny.add(new Sunny(sunny.size()*64*2+32, 64*15, false));
+			}
 		}
 		
 		

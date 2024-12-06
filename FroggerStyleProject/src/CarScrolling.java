@@ -37,7 +37,7 @@ public class CarScrolling{
 		height = 64;
 		x = -width;
 		y = 300;
-		vx = 4;
+		vx = 2;
 		vy = 0;
 		type = 1;
 		
@@ -55,9 +55,9 @@ public class CarScrolling{
 		this.y = y;
 		this.type = type;
 		if (dir) {
-			vx = 8;
-		} else {
 			vx = 4;
+		} else {
+			vx = 2;
 		}
 	}
 

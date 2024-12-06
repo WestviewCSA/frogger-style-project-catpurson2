@@ -27,7 +27,7 @@ public class WaterScrolling{
 		height = 64;
 		x = -width;
 		y = 300;
-		vx = 4;
+		vx = 2;
 		vy = 0;
 		
 		tx = AffineTransform.getTranslateInstance(0, 0);

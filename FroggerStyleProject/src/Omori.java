@@ -77,8 +77,7 @@ public class Omori{
 		}
 		
 		if (x > 620 && x < -width) {
-			x = 600/2-width/2;
-			y = 64;
+			reset();
 		}
 		
 
