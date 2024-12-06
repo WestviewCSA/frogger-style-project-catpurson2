@@ -37,7 +37,7 @@ public class BridgeScrolling{
 		height = 64;
 		x = -width;
 		y = 300;
-		vx = 2;
+		vx = Frame.speed;
 		vy = 0;
 		type = 0;
 		
@@ -56,9 +56,9 @@ public class BridgeScrolling{
 		this.y = y;
 		this.dir = dir;
 		if (dir == 0) {
-			vx = 2;
+			vx = Frame.speed;
 		} else {
-			vx = -2;
+			vx = -Frame.speed;
 		}
 		
 		

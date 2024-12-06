@@ -33,6 +33,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	// to debug
 	public static boolean debugging = false;
 	
+	//if your computer doesn't lag like the school computers do please change this to true so the speed isn't too fast
+	public static boolean slow = false;
+	public static int speed;
+	
 	//Timer related variables
 	int waveTimer = 5; //each wave of enemies is 20s
 	long ellapseTime = 0;
@@ -44,6 +48,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	SimpleAudioPlayer backgroundMusic = new SimpleAudioPlayer("scifi.wav", false);
 	SimpleAudioPlayer crash = new SimpleAudioPlayer("crash.wav", false);
 	SimpleAudioPlayer splash = new SimpleAudioPlayer("splash.wav", false);
+	SimpleAudioPlayer yay = new SimpleAudioPlayer("yay.wav", false);
 //	Music soundBang = new Music("bang.wav", false);
 //	Music soundHaha = new Music("haha.wav", false);
 	
@@ -66,7 +71,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	ArrayList<Sunny> sunny = new ArrayList<Sunny>();
 	ArrayList<Sunny> omorlist = new ArrayList<Sunny>();
 	Background back = new Background();
-	int score = 0;
+	int score = 5;
 	int deaths = 0;
 	
 	
@@ -79,6 +84,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	public void paint(Graphics g) {
 		super.paintComponent(g);
+		
+		//painting all the scrolling
 		
 		g.setColor(Color.green);
 		
@@ -115,6 +122,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			i.paint(g);
 		}
 		
+		//debugging
+		
 		if (debugging) {for (int i = 0; i < 20; i++) {
 			g.drawLine(0, (i+1)*64, 640, (i+1)*64);
 			g.setColor(Color.red);
@@ -122,14 +131,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			g.setColor(Color.green);
 		}}
 		
+		//end array list collision
+		
 		for(int i = 0; i < sunny.size(); i++) {
 			if (sunny.get(i).collided(omori)) {
 				omorlist.add(new Sunny(sunny.get(i).x, sunny.get(i).y, true));
 				sunny.remove(i);
 				omori.reset();
 				score++;
+				yay.play();
+				yay = new SimpleAudioPlayer("yay.wav", false);
 			}
 		}
+		
+		//bridge regeneration
 		
 		for (int i = 0; i < bridge1.length; i++) {
 			if (bridge1[i].x >= 640) {
@@ -225,6 +240,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		bridge3 = bridgeRandom(bridge3);
 		bridge4 = bridgeRandom(bridge4);
 		
+		//bridge painting
+		
 		for (BridgeScrolling i : bridge1) {
 			i.paint(g);
 		}
@@ -240,6 +257,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for (BridgeScrolling i : bridge4) {
 			i.paint(g);
 		}
+		
+		//does he drown
 		
 		int die = 0;
 		
@@ -284,6 +303,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			}
 		}
 		
+		//drowning him
 		
 		switch(die) {
 		case 0:
@@ -296,12 +316,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			splash = new SimpleAudioPlayer("splash.wav", false);
 			break;
 		case 2:
-			omori.vxa = 2;
+			omori.vxa = speed;
 			break;
 		case 3:
-			omori.vxa = -2;
+			omori.vxa = -speed;
 			break;
 		}
+		
+		//car collision
 		
 		for (CarScrolling i : car1) {
 			if(i.collided(omori) && i.type != 0) {
@@ -342,6 +364,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			}
 		}
 		
+		//painting end arraylists
+		
 		for(Sunny i : sunny) {
 			i.paint(g);
 		}
@@ -352,6 +376,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		omori.paint(g);
 		
+		//end screen
 		
 		Color water = new Color(91, 91, 236);
 		g.setColor(water);
@@ -361,10 +386,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		if(score >= 5) {
 			g.setColor(water);
-			back.drawEnd(g);
-			System.out.println("end screen");
+			back.drawEnd(g);  
 			omori.reset();
-			g.drawString("press [space] to restart", 190, 230);
+			g.drawString("press [space] to restart", 220, 230);
 		}
 
 	}
@@ -385,6 +409,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		//backgroundMusic.play();
 		
 		//set up array
+		
+		if(slow) {
+			speed = 2;
+		} else {
+			speed = 8;
+		}
 		
 		for (int i = 0; i < water1.length; i++) {
 			water1[i] = new WaterScrolling(640-640*(i+1), 448);
@@ -426,6 +456,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		while(sunny.size() < 5) {
 			sunny.add(new Sunny(sunny.size()*64*2+32, 64*15, false));
 		}
+		
 		
 
 	
@@ -487,26 +518,30 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		// TODO Auto-generated method stub
 		//System.out.println(arg0.getKeyCode());
 		
+		//moving omori and starting the game
+		
 		switch(arg0.getKeyCode()) {
 		case 38:
-			omori.vyk = -2;
+			omori.vyk = -speed;
 			break;
 		case 40:
-			omori.vyk = 2;
+			omori.vyk = speed;
 			break;
 		case 37:
-			omori.vxk = -2;
+			omori.vxk = -speed;
 			break;
 		case 39:
-			omori.vxk = 2;
+			omori.vxk = speed;
 			break;
 		case 32:
-			score = 0;
-			deaths = 0;
-			sunny = new ArrayList<Sunny>();
-			omorlist = new ArrayList<Sunny>();
-			while(sunny.size() < 5) {
-				sunny.add(new Sunny(sunny.size()*64*2+32, 64*15, false));
+			if (score == 5) {
+				score = 0;
+				deaths = 0;
+				sunny = new ArrayList<Sunny>();
+				omorlist = new ArrayList<Sunny>();
+				while(sunny.size() < 5) {
+					sunny.add(new Sunny(sunny.size()*64*2+32, 64*15, false));
+				}
 			}
 		}
 		
@@ -517,6 +552,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
+		
+		//stop moving
 		switch(arg0.getKeyCode()) {
 		case 38:
 			omori.vyk = 0;
@@ -535,6 +572,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		// TODO Auto-generated method stub
 		
 	}
+	
+	//bridge regeneration function
 	
 	public BridgeScrolling[] bridgeRandom(BridgeScrolling[] bridge1) {
 		

@@ -55,9 +55,9 @@ public class CarScrolling{
 		this.y = y;
 		this.type = type;
 		if (dir) {
-			vx = 4;
+			vx = Frame.speed*2;
 		} else {
-			vx = 2;
+			vx = Frame.speed;
 		}
 	}
 
@@ -67,6 +67,8 @@ public class CarScrolling{
 		
 		x+=vx;
 		y+=vy;	
+		
+		//randomizing color
 		
 		if (x > 640 ) {
 			x = -width-76;
@@ -78,7 +80,7 @@ public class CarScrolling{
 		
 		init(x,y);
 		
-		
+		//changing the color
 		
 		switch(type) {
 		case 0:
