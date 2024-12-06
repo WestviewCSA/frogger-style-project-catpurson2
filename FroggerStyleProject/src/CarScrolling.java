@@ -70,7 +70,7 @@ public class CarScrolling{
 		
 		if (x > 640 ) {
 			x = -width-76;
-			type = (int) (Math.random()*2);
+			type = (int) (Math.random()*1.5);
 			if (type == 1) {
 				type = (int) (Math.random()*4+1);
 			}
